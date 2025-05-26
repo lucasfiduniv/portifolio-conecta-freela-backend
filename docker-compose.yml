@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   api:
@@ -12,8 +12,8 @@ services:
       - redis
     environment:
       - NODE_ENV=development
-      - PORT=3000
-      - DB_HOST=postgres
+      - PORT=3003
+      - DB_HOST=localhost
       - DB_PORT=5432
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
@@ -34,7 +34,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=conecta_freela
+      - POSTGRES_DB=conecta
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
