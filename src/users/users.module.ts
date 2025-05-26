@@ -8,6 +8,7 @@ import { FindOneUserUseCase } from './usecases/find-one-user.usecase';
 import { FindUserByEmailUseCase } from './usecases/find-user-by-email.usecase';
 import { AddRoleUseCase } from './usecases/add-role.usecase';
 import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
   ],
   controllers: [UsersController],
   providers: [
+    UsersService,
     CreateUserUseCase,
     FindAllUsersUseCase,
     FindOneUserUseCase,
@@ -23,6 +25,7 @@ import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
     UpdateRatingUseCase,
   ],
   exports: [
+    UsersService,
     CreateUserUseCase,
     FindAllUsersUseCase,
     FindOneUserUseCase,
@@ -31,4 +34,4 @@ import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
     UpdateRatingUseCase,
   ],
 })
-export class UsersModule {}
+export class UsersModule { }

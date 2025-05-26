@@ -18,27 +18,37 @@ import { configuration } from './config/configuration';
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
       load: [configuration],
     }),
 
-    // Database
+    // Database using DATABASE_URL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('database.host'),
-        port: configService.get('database.port'),
-        username: configService.get('database.username'),
-        password: configService.get('database.password'),
-        database: configService.get('database.name'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: configService.get('database.synchronize'),
-        ssl: configService.get('database.ssl'),
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        console.log('--- DATABASE CONFIG ---');
+        console.log('DATABASE_URL:', databaseUrl);
+
+        try {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            ssl: { rejectUnauthorized: false },
+            synchronize: true,
+            autoLoadEntities: true,
+            logging: true,
+          };
+        } catch (error) {
+          console.error('Erro ao configurar TypeORM:', error);
+          throw error;
+        }
+      },
     }),
 
-    // Redis and BullMQ
+
+
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -49,7 +59,6 @@ import { configuration } from './config/configuration';
           password: configService.get<string>('redis.password'),
         },
       }),
-
     }),
 
     // Feature modules

@@ -1,39 +1,28 @@
-import { Process, Processor } from '@nestjs/bull';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
+import { Job } from 'bullmq';
 import { MailService } from '../../mail/mail.service';
 
 @Processor('email')
-export class EmailProcessor {
+export class EmailProcessor extends WorkerHost {
   private readonly logger = new Logger(EmailProcessor.name);
-  
-  constructor(private mailService: MailService) {}
-  
-  @Process('send-email')
-  async handleSendEmail(job: Job<{
-    to: string;
-    subject: string;
-    template: string;
-    context: any;
-  }>): Promise<void> {
-    this.logger.debug(`Processing email job ${job.id}`);
-    
+
+  constructor(private readonly mailService: MailService) {
+    super();
+  }
+
+  async process(job: Job): Promise<void> {
     const { to, subject, template, context } = job.data;
-    
+
+    this.logger.debug(`📩 Processando job de e-mail: ${job.id}`);
+
     try {
-      // Get template HTML
       const html = this.mailService.getTemplate(template, context);
-      
-      // Send email
-      await this.mailService.sendMail({
-        to,
-        subject,
-        html,
-      });
-      
-      this.logger.debug(`Email sent to ${to}`);
+      await this.mailService.sendMail({ to, subject, html });
+
+      this.logger.debug(`✅ Email enviado para: ${to}`);
     } catch (error) {
-      this.logger.error(`Failed to send email: ${error.message}`);
+      this.logger.error(`❌ Falha ao enviar email: ${error.message}`);
       throw error;
     }
   }

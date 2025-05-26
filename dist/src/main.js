@@ -10,7 +10,10 @@ async function bootstrap() {
     const logger = nest_winston_1.WinstonModule.createLogger({
         transports: [
             new winston.transports.Console({
-                format: winston.format.combine(winston.format.timestamp(), winston.format.ms(), winston.format.colorize(), winston.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)),
+                level: 'debug',
+                format: winston.format.combine(winston.format.colorize({ all: true }), winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), winston.format.printf(({ timestamp, level, message }) => {
+                    return `[${timestamp}] ${level}: ${message}`;
+                })),
             }),
             new winston.transports.File({
                 filename: 'logs/error.log',
@@ -23,35 +26,41 @@ async function bootstrap() {
             }),
         ],
     });
-    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
-        logger,
-    });
-    app.enableCors();
-    app.useGlobalPipes(new common_1.ValidationPipe({
-        whitelist: true,
-        transform: true,
-        forbidNonWhitelisted: true,
-        transformOptions: {
-            enableImplicitConversion: true,
-        },
-    }));
-    const config = new swagger_1.DocumentBuilder()
-        .setTitle('Conecta Freela API')
-        .setDescription('API for the Conecta Freela freelancer marketplace')
-        .setVersion('1.0')
-        .addBearerAuth()
-        .addTag('auth', 'Authentication endpoints')
-        .addTag('users', 'User management endpoints')
-        .addTag('projects', 'Project management endpoints')
-        .addTag('proposals', 'Proposal management endpoints')
-        .addTag('contracts', 'Contract management endpoints')
-        .addTag('reviews', 'Review management endpoints')
-        .build();
-    const document = swagger_1.SwaggerModule.createDocument(app, config);
-    swagger_1.SwaggerModule.setup('api', app, document);
-    const port = process.env.PORT || 3000;
-    await app.listen(port);
-    logger.log(`Application running on port ${port}`);
+    try {
+        const app = await core_1.NestFactory.create(app_module_1.AppModule, {
+            logger,
+        });
+        app.enableCors();
+        app.useGlobalPipes(new common_1.ValidationPipe({
+            whitelist: true,
+            transform: true,
+            forbidNonWhitelisted: true,
+            transformOptions: {
+                enableImplicitConversion: true,
+            },
+        }));
+        const config = new swagger_1.DocumentBuilder()
+            .setTitle('Conecta Freela API')
+            .setDescription('API for the Conecta Freela freelancer marketplace')
+            .setVersion('1.0')
+            .addBearerAuth()
+            .addTag('auth', 'Authentication endpoints')
+            .addTag('users', 'User management endpoints')
+            .addTag('projects', 'Project management endpoints')
+            .addTag('proposals', 'Proposal management endpoints')
+            .addTag('contracts', 'Contract management endpoints')
+            .addTag('reviews', 'Review management endpoints')
+            .build();
+        const document = swagger_1.SwaggerModule.createDocument(app, config);
+        swagger_1.SwaggerModule.setup('api', app, document);
+        const port = process.env.PORT || 3003;
+        await app.listen(port);
+        logger.log('info', `🚀 Application running on port ${port}`);
+    }
+    catch (error) {
+        logger.error('❌ Erro ao iniciar a aplicação:', error);
+        process.exit(1);
+    }
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
