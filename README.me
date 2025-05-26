@@ -1,0 +1,104 @@
+# 🚀 Conecta Freela - Plataforma de Conexão entre Clientes e Freelancers
+
+**Conecta Freela** é um projeto backend desenvolvido com **NestJS** e tecnologias modernas para simular uma plataforma completa de freelancing como 99Freelas ou Workana. O objetivo é oferecer um sistema robusto de autenticação, gestão de projetos, propostas, contratos e avaliações entre clientes e freelancers.
+
+---
+
+## 🧱 Tecnologias Utilizadas
+
+| Tecnologia        | Descrição                                   |
+|-------------------|---------------------------------------------|
+| **NestJS**        | Framework Node modular e escalável          |
+| **TypeORM**       | ORM para PostgreSQL                         |
+| **PostgreSQL**    | Banco de dados relacional (via Supabase)    |
+| **JWT + Bcrypt**  | Autenticação com roles                      |
+| **Docker**        | Ambiente isolado e replicável               |
+| **Swagger**       | Documentação da API                         |
+| **BullMQ + Redis**| Fila assíncrona (envio de e-mails)          |
+| **Nodemailer**    | Envio de e-mails (mock ou real)             |
+| **Jest**          | Testes unitários e de integração            |
+
+---
+
+## ⚙️ Funcionalidades
+
+### 🔐 Autenticação
+- Registro e login de usuários
+- Hash de senha com Bcrypt
+- JWT com expiração e roles (`admin`, `freelancer`, `cliente`)
+
+### 📁 Módulos Principais
+- **Users**: Cadastro de freelancers e clientes
+- **Projects**: Criação de projetos por clientes
+- **Proposals**: Envio de propostas por freelancers
+- **Contracts**: Contrato fechado entre cliente e freelancer
+- **Reviews**: Avaliação de freelancers após entrega do serviço
+
+### 🔔 Mensageria Assíncrona
+- Integração com **BullMQ + Redis**
+- Envio automático de e-mail ao fechar contrato
+
+### 📑 Documentação
+- Disponível em `/api` com **Swagger**
+- Todas as rotas documentadas com exemplos e descrições
+
+### 🧪 Testes Automatizados
+- Cobertura com **Jest** e **Supertest**
+- Testes de autenticação, regras de negócio e segurança
+
+---
+
+## 📦 Como Rodar o Projeto (com Docker)
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/seu-usuario/conecta-freela.git
+cd conecta-freela
+2. Crie um arquivo .env
+env
+Copiar
+Editar
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=postgres
+DB_NAME=conecta_freela
+JWT_SECRET=sua-chave-secreta
+3. Suba com Docker Compose
+bash
+Copiar
+Editar
+docker-compose up --build
+Acesse a API em: http://localhost:3000
+Swagger disponível em: http://localhost:3000/api
+
+🗃 Estrutura de Pastas
+arduino
+Copiar
+Editar
+src/
+├── auth/              # login, registro, JWT, guards
+├── users/             # clientes e freelancers
+├── projects/          # criação de projetos
+├── proposals/         # envio de propostas
+├── contracts/         # contratos ativos
+├── reviews/           # avaliações e notas
+├── mail/              # envio de emails
+├── queue/             # BullMQ (fila de tarefas)
+├── config/            # conexão DB, Redis, etc
+└── main.ts
+🎯 Objetivo do Projeto
+Este projeto foi desenvolvido para fins de estudo e portfólio, com o intuito de demonstrar:
+
+Habilidade com arquitetura escalável
+
+Conhecimento de autenticação segura
+
+Uso de mensageria e filas
+
+Integração entre múltiplos serviços modernos
+
+🧑‍💻 Autor
+Feito com 💻 por [Seu Nome]
+📫 Entre em contato no LinkedIn
