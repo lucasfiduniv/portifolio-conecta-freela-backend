@@ -5,78 +5,45 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from './enums/role.enum';
+import { CreateUserUseCase } from './usecases/create-user.usecase';
+import { FindAllUsersUseCase } from './usecases/find-all-users.usecase';
+import { FindOneUserUseCase } from './usecases/find-one-user.usecase';
+import { FindUserByEmailUseCase } from './usecases/find-user-by-email.usecase';
+import { AddRoleUseCase } from './usecases/add-role.usecase';
+import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-  ) {}
+    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly findAllUsersUseCase: FindAllUsersUseCase,
+    private readonly findOneUserUseCase: FindOneUserUseCase,
+    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly addRoleUseCase: AddRoleUseCase,
+    private readonly updateRatingUseCase: UpdateRatingUseCase,
+  ) { }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password } = createUserDto;
-    
-    // Check if user exists
-    const existingUser = await this.usersRepository.findOne({ where: { email } });
-    if (existingUser) {
-      throw new ConflictException('Email already exists');
-    }
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // Create new user
-    const user = this.usersRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-    });
-    
-    return this.usersRepository.save(user);
+  create(dto: CreateUserDto): Promise<User> {
+    return this.createUserUseCase.execute(dto);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  findAll(): Promise<User[]> {
+    return this.findAllUsersUseCase.execute();
   }
 
-  async findOne(id: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    return user;
+  findOne(id: string): Promise<User> {
+    return this.findOneUserUseCase.execute(id);
   }
 
-  async findByEmail(email: string): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { email } });
-    if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
-    }
-    return user;
+  findByEmail(email: string): Promise<User> {
+    return this.findUserByEmailUseCase.execute(email);
   }
 
-  async addRole(userId: string, role: Role): Promise<User> {
-    const user = await this.findOne(userId);
-    
-    if (!user.roles.includes(role)) {
-      user.roles = [...user.roles, role];
-      return this.usersRepository.save(user);
-    }
-    
-    return user;
+  addRole(userId: string, role: Role): Promise<User> {
+    return this.addRoleUseCase.execute(userId, role);
   }
 
-  async updateRating(userId: string, newRating: number): Promise<User> {
-    const user = await this.findOne(userId);
-    
-    // Calculate new average rating
-    const totalRating = user.rating * user.reviewCount + newRating;
-    const newCount = user.reviewCount + 1;
-    const newAverageRating = totalRating / newCount;
-    
-    // Update user
-    user.rating = newAverageRating;
-    user.reviewCount = newCount;
-    
-    return this.usersRepository.save(user);
+  updateRating(userId: string, rating: number): Promise<User> {
+    return this.updateRatingUseCase.execute(userId, rating);
   }
 }
