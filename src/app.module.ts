@@ -16,6 +16,7 @@ import { CommonModule } from './common/common.module';
 import { configuration } from './config/configuration';
 import { typeOrmConfig } from './config/typeorm.config';
 import { bullMqConfig } from './config/bullmq.config';
+import { UserRepository } from './users/infra/UserRepository';
 
 @Module({
   imports: [
