@@ -15,14 +15,12 @@ import { configuration } from './config/configuration';
 
 @Module({
   imports: [
-    // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',  // Certifique-se de que o arquivo .env esteja sendo carregado
+      envFilePath: '.env',
       load: [configuration],
     }),
 
-    // Database using DATABASE_URL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,10 +30,10 @@ import { configuration } from './config/configuration';
         const dbUsername = configService.get<string>('DB_USERNAME', 'postgres');
         const dbPassword = configService.get<string>('DB_PASSWORD', 'postgres');
         const dbName = configService.get<string>('DB_NAME', 'conecta_freela');
-        const dbSsl = configService.get<string>('DB_SSL') === 'true'; // Aqui o fix!
+        const dbSsl = configService.get<string>('DB_SSL') === 'true';
 
         console.log('--- DATABASE CONFIG ---');
-        console.log('DB_SSL:', dbSsl); // Confirme que aqui aparece "false"
+        console.log('DB_SSL:', dbSsl);
 
         return {
           type: 'postgres',
@@ -52,14 +50,13 @@ import { configuration } from './config/configuration';
       }
     }),
 
-    // BullMQ (Redis configuration)
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const redisHost = configService.get<string>('REDIS_HOST', 'localhost');  // Valor padrão para desenvolvimento
-        const redisPort = configService.get<number>('REDIS_PORT', 6379);  // Valor padrão para desenvolvimento
-        const redisPassword = configService.get<string>('REDIS_PASSWORD', '');  // Se for vazio, usa o padrão
+        const redisHost = configService.get<string>('REDIS_HOST', 'localhost');
+        const redisPort = configService.get<number>('REDIS_PORT', 6379);
+        const redisPassword = configService.get<string>('REDIS_PASSWORD', '');
 
         console.log('--- REDIS CONFIG ---');
         console.log('REDIS_HOST:', redisHost);
@@ -70,13 +67,12 @@ import { configuration } from './config/configuration';
           connection: {
             host: redisHost,
             port: redisPort,
-            password: redisPassword || undefined,  // Caso o password seja vazio, não passamos para o Redis
+            password: redisPassword || undefined,
           },
         };
       },
     }),
 
-    // Feature modules
     AuthModule,
     UsersModule,
     ProjectsModule,
