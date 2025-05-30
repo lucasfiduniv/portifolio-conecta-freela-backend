@@ -18,7 +18,7 @@ import { configuration } from './config/configuration';
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '.env',  // Certifique-se de que o arquivo .env esteja sendo carregado
       load: [configuration],
     }),
 
@@ -27,38 +27,53 @@ import { configuration } from './config/configuration';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        const databaseUrl = configService.get<string>('DATABASE_URL');
-        console.log('--- DATABASE CONFIG ---');
-        console.log('DATABASE_URL:', databaseUrl);
+        const dbHost = configService.get<string>('DB_HOST', 'localhost');
+        const dbPort = configService.get<number>('DB_PORT', 5435);
+        const dbUsername = configService.get<string>('DB_USERNAME', 'postgres');
+        const dbPassword = configService.get<string>('DB_PASSWORD', 'postgres');
+        const dbName = configService.get<string>('DB_NAME', 'conecta_freela');
+        const dbSsl = configService.get<string>('DB_SSL') === 'true'; // Aqui o fix!
 
-        try {
-          return {
-            type: 'postgres',
-            url: databaseUrl,
-            ssl: { rejectUnauthorized: false },
-            synchronize: true,
-            autoLoadEntities: true,
-            logging: true,
-          };
-        } catch (error) {
-          console.error('Erro ao configurar TypeORM:', error);
-          throw error;
-        }
-      },
+        console.log('--- DATABASE CONFIG ---');
+        console.log('DB_SSL:', dbSsl); // Confirme que aqui aparece "false"
+
+        return {
+          type: 'postgres',
+          host: dbHost,
+          port: dbPort,
+          username: dbUsername,
+          password: dbPassword,
+          database: dbName,
+          ssl: dbSsl ? { rejectUnauthorized: false } : false,
+          synchronize: true,
+          autoLoadEntities: true,
+          logging: true,
+        };
+      }
     }),
 
-
-
+    // BullMQ (Redis configuration)
     BullModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        connection: {
-          host: configService.get<string>('redis.host'),
-          port: configService.get<number>('redis.port'),
-          password: configService.get<string>('redis.password'),
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const redisHost = configService.get<string>('REDIS_HOST', 'localhost');  // Valor padrão para desenvolvimento
+        const redisPort = configService.get<number>('REDIS_PORT', 6379);  // Valor padrão para desenvolvimento
+        const redisPassword = configService.get<string>('REDIS_PASSWORD', '');  // Se for vazio, usa o padrão
+
+        console.log('--- REDIS CONFIG ---');
+        console.log('REDIS_HOST:', redisHost);
+        console.log('REDIS_PORT:', redisPort);
+        console.log('REDIS_PASSWORD:', redisPassword);
+
+        return {
+          connection: {
+            host: redisHost,
+            port: redisPort,
+            password: redisPassword || undefined,  // Caso o password seja vazio, não passamos para o Redis
+          },
+        };
+      },
     }),
 
     // Feature modules
