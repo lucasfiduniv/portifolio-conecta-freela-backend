@@ -7,8 +7,8 @@ import { ContractsModule } from '../contracts/contracts.module';
 import { UsersModule } from '../users/users.module';
 import { ReviewRepository } from './infra/ReviewRepository';
 import { CreateReviewUseCase } from './usecases/create-review/create-review.usecase';
-import { FindAllReviewsByFreelancerUseCase } from './usecases/find-all-reviews-by-freelancer.usecase';
-import { FindReviewByIdUseCase } from './usecases/find-review-by-id.usecase';
+import { FindAllReviewsByFreelancerUseCase } from './usecases/find-all-reviews-by-freelancer/find-all-reviews-by-freelancer.usecase';
+import { FindReviewByIdUseCase } from './usecases/find-review-by-id/find-review-by-id.usecase';
 
 @Module({
   imports: [
