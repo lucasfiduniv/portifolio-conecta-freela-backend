@@ -1,26 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { Role } from '../enums/role.enum';
-import { FindOneUserUseCase } from './find-one-user.usecase';
+import { User } from '../entities/user.entity';
+import { IUserRepository } from '../UserRepository/IUserRepository';
 
 @Injectable()
 export class AddRoleUseCase {
   constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private findOneUserUseCase: FindOneUserUseCase,
-  ) {}
+    @Inject('IUserRepository')
+    private readonly usersRepository: IUserRepository,
+  ) { }
 
   async execute(userId: string, role: Role): Promise<User> {
-    const user = await this.findOneUserUseCase.execute(userId);
-    
+    const user = await this.usersRepository.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
     if (!user.roles.includes(role)) {
       user.roles = [...user.roles, role];
       return this.usersRepository.save(user);
     }
-    
+
     return user;
   }
 }
