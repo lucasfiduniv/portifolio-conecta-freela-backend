@@ -1,7 +1,7 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Role } from '../enums/role.enum';
-import { User } from '../entities/user.entity';
-import { IUserRepository } from '../UserRepository/IUserRepository';
+import { Role } from '../../enums/role.enum';
+import { User } from '../../entities/user.entity';
+import { IUserRepository } from '../../UserRepository/IUserRepository';
 
 @Injectable()
 export class AddRoleUseCase {
