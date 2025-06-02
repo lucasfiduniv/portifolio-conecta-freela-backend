@@ -1,15 +1,23 @@
-FROM node:18-alpine
+# Etapa de build
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm ci
 
 COPY . .
-
 RUN npm run build
 
-EXPOSE 3003
+# Etapa de produção
+FROM node:18-alpine
 
-CMD ["npm", "run", "start:prod"]
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production
+
+EXPOSE 3000
+
+CMD ["node", "dist/main"]

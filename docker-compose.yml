@@ -11,21 +11,18 @@ services:
       - postgres
       - redis
     environment:
-      - NODE_ENV=${NODE_ENV:-development}
-      - PORT=${PORT:-3000}
-      - DB_HOST=${DB_HOST:-postgres}
-      - DB_PORT=${DB_PORT:-5432}
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
-      - DB_NAME=${DB_NAME:-conecta_freela}
-      - DB_SSL=${DB_SSL:-false}
-      - REDIS_HOST=${REDIS_HOST:-redis}
-      - REDIS_PORT=${REDIS_PORT:-6379}
-      - JWT_SECRET=${JWT_SECRET:-change_this_in_production}
-      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1d}
-    volumes:
-      - ./:/app
-      - /app/node_modules
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-3000}
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-conecta_freela}
+      DB_SSL: ${DB_SSL:-false}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      JWT_SECRET: ${JWT_SECRET:-change_this_in_production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
     networks:
       - backend
 
@@ -34,9 +31,9 @@ services:
     ports:
       - "5435:5432"
     environment:
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - POSTGRES_DB=${POSTGRES_DB:-conecta_freela}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-conecta_freela}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
