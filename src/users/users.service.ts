@@ -6,7 +6,7 @@ import { CreateUserUseCase } from './usecases/create-user.usecase';
 import { FindAllUsersUseCase } from './usecases/find-all-users.usecase';
 import { FindOneUserUseCase } from './usecases/find-one-user.usecase';
 import { FindUserByEmailUseCase } from './usecases/find-user-by-email.usecase';
-import { AddRoleUseCase } from './usecases/add-role.usecase';
+import { AddRoleUseCase } from './usecases/add-role/add-role.usecase';
 import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
 
 @Injectable()
