@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Role } from './enums/role.enum';
-import { CreateUserUseCase } from './usecases/create-user.usecase';
-import { FindAllUsersUseCase } from './usecases/find-all-users.usecase';
-import { FindOneUserUseCase } from './usecases/find-one-user.usecase';
-import { FindUserByEmailUseCase } from './usecases/find-user-by-email.usecase';
+import { CreateUserUseCase } from './usecases/create-user/create-user.usecase';
+import { FindAllUsersUseCase } from './usecases/find-all-users/find-all-users.usecase';
+import { FindOneUserUseCase } from './usecases/find-one-user/find-one-user.usecase';
+import { FindUserByEmailUseCase } from './usecases/find-user-by-email/find-user-by-email.usecase';
 import { AddRoleUseCase } from './usecases/add-role/add-role.usecase';
-import { UpdateRatingUseCase } from './usecases/update-rating.usecase';
+import { UpdateRatingUseCase } from './usecases/update-rating/update-rating.usecase';
 
 @Injectable()
 export class UsersService {

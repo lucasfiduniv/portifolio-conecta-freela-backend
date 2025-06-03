@@ -5,9 +5,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from './enums/role.enum';
-import { CreateUserUseCase } from './usecases/create-user.usecase';
-import { FindAllUsersUseCase } from './usecases/find-all-users.usecase';
-import { FindOneUserUseCase } from './usecases/find-one-user.usecase';
+import { CreateUserUseCase } from './usecases/create-user/create-user.usecase';
+import { FindAllUsersUseCase } from './usecases/find-all-users/find-all-users.usecase';
+import { FindOneUserUseCase } from './usecases/find-one-user/find-one-user.usecase';
 
 @ApiTags('users')
 @Controller('users')
@@ -16,7 +16,7 @@ export class UsersController {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly findAllUsersUseCase: FindAllUsersUseCase,
     private readonly findOneUserUseCase: FindOneUserUseCase,
-  ) {}
+  ) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
