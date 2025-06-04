@@ -1,9 +1,9 @@
 // proposals.service.ts
 import { Injectable } from '@nestjs/common';
-import { CreateProposalUseCase } from './use-cases/create-proposal.usecase';
-import { FindAllProposalsUseCase } from './use-cases/find-all-proposals.usecase';
-import { FindOneProposalUseCase } from './use-cases/find-one-proposal.usecase';
-import { UpdateProposalStatusUseCase } from './use-cases/update-proposal-status.usecase';
+import { CreateProposalUseCase } from './use-cases/create-proposal/create-proposal.usecase';
+import { FindAllProposalsUseCase } from './use-cases/find-all-proposals/find-all-proposals.usecase';
+import { FindOneProposalUseCase } from './use-cases/find-one-proposal/find-one-proposal.usecase';
+import { UpdateProposalStatusUseCase } from './use-cases/update-proposal-status/update-proposal-status.usecase';
 import { CreateProposalDto } from './dto/create-proposal.dto';
 import { UpdateProposalStatusDto } from './dto/update-proposal-status.dto';
 import { Role } from '@/users/enums/role.enum';
