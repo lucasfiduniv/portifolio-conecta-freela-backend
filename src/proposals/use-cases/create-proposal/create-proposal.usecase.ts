@@ -1,10 +1,10 @@
 // create-proposal.usecase.ts
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
-import { IProposalRepository } from '../ProposalRepository/IProposalRepository';
-import { CreateProposalDto } from '../dto/create-proposal.dto';
-import { Proposal } from '../entities/proposal.entity';
-import { ProjectsService } from '../../projects/projects.service';
-import { QueueService } from '../../queue/queue.service';
+import { IProposalRepository } from '../../ProposalRepository/IProposalRepository';
+import { CreateProposalDto } from '../../dto/create-proposal.dto';
+import { Proposal } from '../../entities/proposal.entity';
+import { ProjectsService } from '../../../projects/projects.service';
+import { QueueService } from '../../../queue/queue.service';
 
 @Injectable()
 export class CreateProposalUseCase {

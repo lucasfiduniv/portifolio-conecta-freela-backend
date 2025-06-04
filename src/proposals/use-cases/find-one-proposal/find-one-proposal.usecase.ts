@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Proposal } from '../entities/proposal.entity';
+import { Proposal } from '../../entities/proposal.entity';
 
 export class FindOneProposalUseCase {
     constructor(private proposalsRepository: Repository<Proposal>) { }
@@ -8,7 +8,7 @@ export class FindOneProposalUseCase {
     async execute(id: string): Promise<Proposal> {
         const proposal = await this.proposalsRepository.findOne({
             where: { id },
-            relations: ['freelancer', 'project', 'project.client'],
+            relations: { freelancer: true, project: { client: true }, },
         });
 
         if (!proposal) {

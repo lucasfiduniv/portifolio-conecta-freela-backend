@@ -1,11 +1,11 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Repository, Not, Equal } from 'typeorm';
-import { Proposal } from '../entities/proposal.entity';
-import { UpdateProposalStatusDto } from '../dto/update-proposal-status.dto';
-import { QueueService } from '../../queue/queue.service';
-import { ProposalStatus } from '../enums/proposal-status.enum';
-import { Role } from '../../users/enums/role.enum';
-import { FindOneProposalUseCase } from './find-one-proposal.usecase';
+import { Proposal } from '../../entities/proposal.entity';
+import { UpdateProposalStatusDto } from '../../dto/update-proposal-status.dto';
+import { QueueService } from '../../../queue/queue.service';
+import { ProposalStatus } from '../../enums/proposal-status.enum';
+import { Role } from '../../../users/enums/role.enum';
+import { FindOneProposalUseCase } from '../find-one-proposal/find-one-proposal.usecase';
 
 export class UpdateProposalStatusUseCase {
     constructor(

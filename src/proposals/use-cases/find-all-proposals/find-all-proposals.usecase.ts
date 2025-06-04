@@ -1,8 +1,8 @@
 import { ForbiddenException } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Proposal } from '../entities/proposal.entity';
-import { ProjectsService } from '../../projects/projects.service';
-import { Role } from '../../users/enums/role.enum';
+import { Proposal } from '../../entities/proposal.entity';
+import { ProjectsService } from '../../../projects/projects.service';
+import { Role } from '../../../users/enums/role.enum';
 
 export class FindAllProposalsUseCase {
     constructor(
