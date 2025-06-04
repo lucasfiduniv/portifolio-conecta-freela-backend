@@ -5,72 +5,33 @@ import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { Role } from '../users/enums/role.enum';
+import { CreateProjectUseCase } from './usecases/create-project/create-project.usecase';
+import { FindOneProjectUseCase } from './usecases/find-one-project/find-one-project.usecase';
+import { RemoveProjectUseCase } from './usecases/remove-project/remove-project.usecase';
+import { FindAllProjectsUseCase } from './usecases/find-all-projects/find-all-projects.usecase';
 
 @Injectable()
 export class ProjectsService {
   constructor(
-    @InjectRepository(Project)
-    private projectsRepository: Repository<Project>,
-  ) {}
+    private readonly createProject: CreateProjectUseCase,
+    private readonly findAllProjects: FindAllProjectsUseCase,
+    private readonly findOneProject: FindOneProjectUseCase,
+    private readonly removeProject: RemoveProjectUseCase,
+  ) { }
 
-  async create(createProjectDto: CreateProjectDto, clientId: string): Promise<Project> {
-    const project = this.projectsRepository.create({
-      ...createProjectDto,
-      clientId,
-    });
-    
-    return this.projectsRepository.save(project);
+  create(dto: CreateProjectDto, clientId: string) {
+    return this.createProject.execute(dto, clientId);
   }
 
-  async findAll(paginationDto: PaginationDto, userId?: string, roles?: Role[]): Promise<{ items: Project[]; meta: any }> {
-    const { page, limit } = paginationDto;
-    const skip = (page - 1) * limit;
-    
-    let query = this.projectsRepository.createQueryBuilder('project')
-      .leftJoinAndSelect('project.client', 'client')
-      .skip(skip)
-      .take(limit)
-      .orderBy('project.createdAt', 'DESC');
-    
-    // If user is a client, only show their own projects
-    if (roles?.includes(Role.CLIENT) && !roles?.includes(Role.ADMIN)) {
-      query = query.where('project.clientId = :userId', { userId });
-    }
-    
-    const [items, total] = await query.getManyAndCount();
-    
-    return {
-      items,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
+  findAll(pagination: PaginationDto, userId?: string, roles?: Role[]) {
+    return this.findAllProjects.execute(pagination, userId, roles);
   }
 
-  async findOne(id: string): Promise<Project> {
-    const project = await this.projectsRepository.findOne({ 
-      where: { id },
-      relations: ['client', 'proposals', 'proposals.freelancer'],
-    });
-    
-    if (!project) {
-      throw new NotFoundException(`Project with ID ${id} not found`);
-    }
-    
-    return project;
+  findOne(id: string) {
+    return this.findOneProject.execute(id);
   }
 
-  async remove(id: string, userId: string, roles: Role[]): Promise<void> {
-    const project = await this.findOne(id);
-    
-    // Check if user is the project owner or an admin
-    if (project.clientId !== userId && !roles.includes(Role.ADMIN)) {
-      throw new ForbiddenException('You do not have permission to delete this project');
-    }
-    
-    await this.projectsRepository.remove(project);
+  remove(id: string, userId: string, roles: Role[]) {
+    return this.removeProject.execute(id, userId, roles);
   }
 }
