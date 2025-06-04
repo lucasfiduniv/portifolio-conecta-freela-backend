@@ -8,7 +8,7 @@ import { ProposalsService } from './proposals.service';
 
 
 
-import { CreateProposalUseCase } from './use-cases/create-proposal.usecase';
+import { CreateProposalUseCase } from './use-cases/create-proposal/create-proposal.usecase';
 import { ProposalRepository } from './infra/ProposalRepository';
 
 @Module({
