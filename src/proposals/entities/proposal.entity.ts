@@ -13,7 +13,7 @@ export class Proposal {
   price: number;
 
   @Column()
-  deliveryTime: number; // In days
+  deliveryTime: number;
 
   @Column('text')
   coverLetter: string;
