@@ -1,11 +1,14 @@
 import { IProjectRepository } from '@/projects/ProjectRepository/IProjectRepository';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 @Injectable()
 export class FindOneProjectUseCase {
-    constructor(private readonly projectRepo: IProjectRepository) { }
+    constructor(
+        @Inject('IProjectRepository')
+        private readonly projectRepository: IProjectRepository,
+    ) { }
 
     async execute(id: string) {
-        const project = await this.projectRepo.findOne(id);
+        const project = await this.projectRepository.findOne(id);
         if (!project) {
             throw new NotFoundException(`Project with ID ${id} not found`);
         }

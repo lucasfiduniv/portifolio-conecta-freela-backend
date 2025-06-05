@@ -1,5 +1,5 @@
 import { IProjectRepository } from '@/projects/ProjectRepository/IProjectRepository';
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, Inject } from '@nestjs/common';
 import { FindOneProjectUseCase } from '../find-one-project/find-one-project.usecase';
 import { Role } from '@/users/enums/role.enum';
 
@@ -7,8 +7,9 @@ import { Role } from '@/users/enums/role.enum';
 @Injectable()
 export class RemoveProjectUseCase {
     constructor(
-        private readonly projectRepo: IProjectRepository,
-        private readonly findOne: FindOneProjectUseCase,
+        @Inject('IProjectRepository')
+        private readonly projectRepository: IProjectRepository,
+        private readonly findOne: FindOneProjectUseCase
     ) { }
 
     async execute(id: string, userId: string, roles: Role[]): Promise<void> {
@@ -18,6 +19,6 @@ export class RemoveProjectUseCase {
             throw new ForbiddenException('You do not have permission to delete this project');
         }
 
-        await this.projectRepo.remove(project);
+        await this.projectRepository.remove(project);
     }
 }

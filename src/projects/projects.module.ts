@@ -21,6 +21,6 @@ import { FindAllProjectsUseCase } from './usecases/find-all-projects/find-all-pr
     FindOneProjectUseCase,
     RemoveProjectUseCase,
   ],
-  exports: [ProjectsService],
+  exports: [ProjectsService,],
 })
 export class ProjectsModule { }
